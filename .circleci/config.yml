@@ -423,7 +423,7 @@ jobs:
               echo $FRONTEND_WEBSITE
               if curl -s $FRONTEND_WEBSITE | grep "Welcome"
               then
-                exit 0
+                exit 1
               else
                 exit 1
               fi
@@ -457,7 +457,7 @@ jobs:
  
       # Here's where you will add some code to rollback on failure  
 
-cleanup:
+  cleanup:
     docker:
       # Docker image here
       - image: cimg/base:stable

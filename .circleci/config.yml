@@ -358,19 +358,37 @@ jobs:
                     
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
+      - image: cimg/base:stable
     steps:
-      # Checkout code from git
       # Add ssh keys with fingerprint
       # attach workspace
-      - run:
-          name: Install dependencies
-          command: |
-            # your code here
+      - checkout
+      - add_ssh_keys:
+          fingerprints: 
+            - "f5:c6:90:a3:84:fd:ce:1d:4f:f7:31:fb:54:a6:43:16"
+      - attach_workspace:
+          at: ~/
+      - install_nodejs
+      - install_awscli
+      - install_ansible
       - run:
           name: Deploy backend
           command: |
-            # your code here
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            cd .circleci/ansible
+            mkdir files
+            cd files
+            tar -C ../../../backend -czvf artifact.tar.gz .
+            cd ../
+            
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - destroy-environment
+      - revert-migrations
       # Here's where you will add some code to rollback on failure  
 
 #   smoke-test:

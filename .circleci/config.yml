@@ -358,7 +358,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: python:3.9.0-alpine
+      - image: cimg/base:stable
     steps:
       # Add ssh keys with fingerprint
       # attach workspace
@@ -378,7 +378,7 @@ jobs:
             npm i
             npm run build
             cd ..
-
+            
             cd .circleci/ansible
             mkdir files
             cd files
